@@ -1,4 +1,5 @@
 import { FC, useEffect, useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { SelectChangeEvent } from '@mui/material/Select';
 
 import {
@@ -13,10 +14,12 @@ import {
 import { Theme } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
+import { savePostsList } from "./../../store/postsSlice";
 import type { PostDTO } from "./../../models/postsDTO.model";
 import type { UserDTO } from "../../models/userDTO.model";
 import type { PostModel } from "./../../models/post.model";
 import PostList from "./PostList";
+import { BasicUserInfoModel } from "../../models/basicUserInfo.model";
 
 const postsContainerStyles = makeStyles((theme: Theme) => ({
     filterOptionLeft: {
@@ -31,6 +34,9 @@ const postsContainerStyles = makeStyles((theme: Theme) => ({
 
 const PostsContainer: FC = () => {
     const classes = postsContainerStyles();
+    const postsList = useSelector((state) => (state as any).posts);
+    const dispatch = useDispatch();
+    console.log("Posts from the local state: ", postsList);
 
     const [posts, setPosts] = useState<PostModel[]>([]);
     const [fetchedPosts, setFetchedPosts] = useState<PostDTO[]>([]);
@@ -45,16 +51,21 @@ const PostsContainer: FC = () => {
 
     const deliverFilteringInfo = () => {
         let filtered: PostModel[] = [];
+        console.log(postsList);
+        console.log(posts);
 
         switch (filterBy) {
             case "username":
-                filtered = posts.filter(p => p.user.name.toLocaleLowerCase() === searchTerm.toLocaleLowerCase());
+                filtered = 
+                    postsList.posts.filter((p: PostModel) => p.user.name.toLocaleLowerCase() === searchTerm.toLocaleLowerCase());
                 break;
             case "post-title":
-                filtered = posts.filter(p => p.title.toLocaleLowerCase().includes(searchTerm.toLocaleLowerCase()));
+                filtered = 
+                    postsList.posts.filter((p: PostModel) => p.title.toLocaleLowerCase().includes(searchTerm.toLocaleLowerCase()));
                 break;
             default:
-                filtered = posts.filter(p => p.body.toLocaleLowerCase().includes(searchTerm.toLocaleLowerCase()));
+                filtered = 
+                    postsList.posts.filter((p: PostModel) => p.body.toLocaleLowerCase().includes(searchTerm.toLocaleLowerCase()));
         }
         
         setPosts(filtered);
@@ -111,6 +122,7 @@ const PostsContainer: FC = () => {
           };
 
           formatted.push(val);
+          dispatch(savePostsList([...formatted]));
           setPosts(formatted);
         }
       }
