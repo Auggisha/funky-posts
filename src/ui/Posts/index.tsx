@@ -19,7 +19,6 @@ import type { PostDTO } from "./../../models/postsDTO.model";
 import type { UserDTO } from "../../models/userDTO.model";
 import type { PostModel } from "./../../models/post.model";
 import PostList from "./PostList";
-import { BasicUserInfoModel } from "../../models/basicUserInfo.model";
 
 const postsContainerStyles = makeStyles((theme: Theme) => ({
     filterOptionLeft: {
@@ -36,7 +35,6 @@ const PostsContainer: FC = () => {
     const classes = postsContainerStyles();
     const postsList = useSelector((state) => (state as any).posts);
     const dispatch = useDispatch();
-    console.log("Posts from the local state: ", postsList);
 
     const [posts, setPosts] = useState<PostModel[]>([]);
     const [fetchedPosts, setFetchedPosts] = useState<PostDTO[]>([]);
@@ -51,8 +49,6 @@ const PostsContainer: FC = () => {
 
     const deliverFilteringInfo = () => {
         let filtered: PostModel[] = [];
-        console.log(postsList);
-        console.log(posts);
 
         switch (filterBy) {
             case "username":
@@ -71,19 +67,13 @@ const PostsContainer: FC = () => {
         setPosts(filtered);
     }
 
-    const fetchAllPosts = async () => {
-      const test = 
-        await fetch('https://jsonplaceholder.typicode.com/posts')
-          .then(response => response.json())
-          .then(data => setFetchedPosts(data));
-    }
+    const fetchAllPosts = async () => await fetch('https://jsonplaceholder.typicode.com/posts')
+        .then(response => response.json())
+        .then(data => setFetchedPosts(data));
 
-    const fetchAllUsers = async () => {
-      const test = 
-        await fetch('https://jsonplaceholder.typicode.com/users')
-          .then(response => response.json())
-          .then(data => setFetchedUsers(data));
-    }
+    const fetchAllUsers = async () => await fetch('https://jsonplaceholder.typicode.com/users')
+        .then(response => response.json())
+        .then(data => setFetchedUsers(data));
 
     useEffect(() => {
         if (posts.length === 0 && searchTerm === "") 
@@ -94,6 +84,8 @@ const PostsContainer: FC = () => {
             setPostsInfo(`Viewing all posts (${posts.length} in total)`);
         else 
             setPostsInfo(`Search for "${searchTerm}" in ${filterBy} returned ${posts.length} results`);
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [posts]);
   
     useEffect(() => {
@@ -126,7 +118,7 @@ const PostsContainer: FC = () => {
           setPosts(formatted);
         }
       }
-    }, [fetchedPosts, fetchedUsers]);
+    }, [fetchedPosts, fetchedUsers, dispatch]);
 
     return (
         <Grid container pt={6}>

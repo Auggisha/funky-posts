@@ -28,6 +28,7 @@ const Header: FC = () => {
                 letterSpacing=".25em" 
                 fontWeight="600" 
                 color= "white"
+                textAlign="center"
             >
                 FUNKY POSTS
             </Typography>
