@@ -4,5 +4,4 @@ export interface BasicUserInfoModel {
     website: string;
     name: string;
     avatar: string;
-    avatarThumbnail: string;
 };

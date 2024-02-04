@@ -18,6 +18,12 @@ const postListStyles = makeStyles((theme: Theme) => ({
     },
     commentsInfo: {
         marginTop: "12px!important"
+    },
+    test: {
+        '&:hover': {
+            background: '#DCDCDC',
+            cursor: "pointer"
+    }
     }
 }));
 

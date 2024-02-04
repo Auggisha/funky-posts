@@ -1,6 +1,7 @@
 import { FC, useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { SelectChangeEvent } from '@mui/material/Select';
+import { AvatarGenerator } from 'random-avatar-generator';
 
 import {
     Button,
@@ -13,12 +14,14 @@ import {
 } from '@mui/material';
 import { Theme } from '@mui/material';
 import { makeStyles } from '@mui/styles';
+import FeatherIcon from 'feather-icons-react';
 
 import { savePostsList } from "./../../store/postsSlice";
 import type { PostDTO } from "./../../models/postsDTO.model";
 import type { UserDTO } from "../../models/userDTO.model";
 import type { PostModel } from "./../../models/post.model";
 import PostList from "./PostList";
+
 
 const postsContainerStyles = makeStyles((theme: Theme) => ({
     filterOptionLeft: {
@@ -28,6 +31,9 @@ const postsContainerStyles = makeStyles((theme: Theme) => ({
     filterOptionRight: {
         width: "320px", 
         marginRight: "20px!important"
+    },
+    icon: {
+        cursor: "pointer"
     }
 }));
 
@@ -35,6 +41,7 @@ const PostsContainer: FC = () => {
     const classes = postsContainerStyles();
     const postsList = useSelector((state) => (state as any).posts);
     const dispatch = useDispatch();
+    const generator = new AvatarGenerator();
 
     const [posts, setPosts] = useState<PostModel[]>([]);
     const [fetchedPosts, setFetchedPosts] = useState<PostDTO[]>([]);
@@ -43,9 +50,14 @@ const PostsContainer: FC = () => {
     const [searchTerm, setSearchTerm] = useState<string>("");
     const [postsInfo, setPostsInfo] = useState<string | null>("");
 
+    const resetFilters = () => {
+        setFilterBy("username");
+        setSearchTerm("");
+        setPosts([...postsList.posts]);
+    }
+
     const handleChangeFilterBy = (event: SelectChangeEvent): void => setFilterBy(event.target.value);
     const saveSearchTermValue = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => setSearchTerm(event.target.value);
-  
 
     const deliverFilteringInfo = () => {
         let filtered: PostModel[] = [];
@@ -84,7 +96,6 @@ const PostsContainer: FC = () => {
             setPostsInfo(`Viewing all posts (${posts.length} in total)`);
         else 
             setPostsInfo(`Search for "${searchTerm}" in ${filterBy} returned ${posts.length} results`);
-
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [posts]);
   
@@ -96,6 +107,10 @@ const PostsContainer: FC = () => {
     useEffect(() => {
       if (fetchedPosts.length > 0 && fetchedUsers.length > 0) {
         let formatted = [];
+        let usersWithAvatar: UserDTO[] = [...fetchedUsers];   
+
+        for (let i = 0; i < fetchedUsers.length; i++)
+            usersWithAvatar[i].avatar = generator.generateRandomAvatar();
 
         for (let i = 0; i < fetchedPosts.length; i++) {
           const val = {
@@ -107,8 +122,7 @@ const PostsContainer: FC = () => {
               email: fetchedUsers.find(x => x.id === fetchedPosts[i].userId)!.email,
               website: fetchedUsers.find(x => x.id === fetchedPosts[i].userId)!.website,
               name: fetchedUsers.find(x => x.id === fetchedPosts[i]!.userId)!.username,
-              avatar: "https://via.placeholder.com/600/92c952",
-              avatarThumbnail: "https://via.placeholder.com/150/92c952"
+              avatar: usersWithAvatar.find(x => x.id === fetchedPosts[i]!.userId)!.avatar,
             },
             commentsNo: "N/A"
           };
@@ -118,6 +132,7 @@ const PostsContainer: FC = () => {
           setPosts(formatted);
         }
       }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fetchedPosts, fetchedUsers, dispatch]);
 
     return (
@@ -170,26 +185,43 @@ const PostsContainer: FC = () => {
                     label="Search..."
                     variant="outlined" 
                     onChange={saveSearchTermValue}
+                    value={searchTerm}
                     className={classes.filterOptionRight}
+                    InputProps={{endAdornment:
+                        <Button onClick={() => resetFilters()}>
+                            <FeatherIcon 
+                                icon="x-circle" 
+                                size={searchTerm !== "" ? "32" : "0"} 
+                                strokeWidth="1px"
+                                className={classes.icon}
+                            />
+                        </Button> 
+                    }}
                 />
 
                 <Button
                     variant="contained" 
                     onClick={() => deliverFilteringInfo()}
+                    disabled={searchTerm.length < 3}
                 >
                     Search
+                    
                 </Button>
             </Grid>
 
-            <Grid m={10}>
-                <Typography fontStyle="italic" fontWeight="600" fontSize="1.2em" textAlign="right">
+            <Grid mt={6} mb={3} width="100%">
+                <Typography fontStyle="italic" letterSpacing="0.05em" fontWeight="500" fontSize="1.1em" textAlign="center">
                     {postsInfo}
                 </Typography>
             </Grid>
 
-            <Grid>
-                <PostList posts={posts} />
-            </Grid>
+            <Grid xs={0} md={2} />
+
+            {posts.length > 0 && (
+                <Grid item xs={12} md={8} style={{ border: "2px solid #999", borderRadius: "12px", boxShadow: "rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset, rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset, rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px"}} p={4}>
+                    <PostList posts={posts} />
+                </Grid>
+            )}
         </Grid>
     );
 }

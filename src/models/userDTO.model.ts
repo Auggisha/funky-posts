@@ -19,5 +19,6 @@ export interface UserDTO     {
         name: string;
         catchPhrase: string;
         bs: string;
-    }
+    },
+    avatar?: any;
 };

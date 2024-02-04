@@ -8,7 +8,8 @@ const headerStyles = makeStyles((theme: Theme) => ({
         background: 'darkBlue', 
         position: "sticky", 
         top: 0, 
-        boxShadow: "rgba(50, 50, 93, 0.25) 0px 30px 60px -12px, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px"
+        boxShadow: "rgba(50, 50, 93, 0.25) 0px 30px 60px -12px, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px",
+        zIndex: 10
     },
     versionInfo: {
         position: "absolute", 

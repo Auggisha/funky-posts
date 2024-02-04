@@ -1,12 +1,10 @@
-import React, { FC } from "react";
-import logo from './logo.svg';
-import { Grid, LinearProgress, Typography, Theme } from '@mui/material';
-import puppy from './../assets/puppy.jpg';
-import puppy2 from './assets/puppey2.jpg';
+import { FC } from "react";
+import { Grid, LinearProgress, Typography, List } from '@mui/material';
 import FeatherIcon from 'feather-icons-react';
 import { Link } from "react-router-dom";
-import { BrowserRouter } from 'react-router-dom'
+
 import postsStyles from "./PostList.styles";
+
 
 interface PostsProps {
     posts: any;
@@ -22,16 +20,42 @@ const PostList: FC<PostsProps> = ({ posts }) => {
     }
 
     return (
-        <>
+        <List>
+
         {posts ? (
             posts.map((post: any) => (
-                <Grid container key={post.id}>
-                    <Grid item container xs={12} sm={4} padding={2}>
-                        <Grid item md={1} lg={3}/>
+                <Grid container key={post.id} padding={1} className={classes.test} pt={2}>
+                        <Grid item xs={3} md={1} display="flex" alignItems="center" justifyContent="center">
+                            <FeatherIcon icon="book-open" size="50" strokeWidth="1px"/>
+                        </Grid>
 
-                        <Grid item md={10} lg={6}>
+                        <Grid 
+                            item 
+                            xs={9}
+                            md={8} 
+                            padding={1} 
+                            display="flex" 
+                            justifyContent="center" 
+                            className={classes.postPreview}
+                        >
+                            <Typography textAlign="left" variant="h6" color="darkBlue">
+                            {post.title}
+                            </Typography>
+
+                            <Typography textAlign="left">
+                                "
+                                {post.body}
+                                ..." (to full post)
+                            </Typography>
+                        
+                            <Typography textAlign="right" className={classes.commentsInfo}>
+                                comments: {post.commentsNo}
+                            </Typography>
+                        </Grid>
+
+                        <Grid item md={3} textAlign="center" p={1}>
                             <img 
-                                src={post.user.avatarThumbnail} 
+                                src={post.user.avatar} 
                                 alt="avatar" 
                                 height="90" 
                                 width="90"
@@ -42,12 +66,10 @@ const PostList: FC<PostsProps> = ({ posts }) => {
                                 {post.user.name} ({countPosts(post.user.id)})
                             </Typography>
 
-                            <Grid container>
-                                <Grid item>
-                                    <FeatherIcon icon="mail" size="22"/>
-                                </Grid>
+                            <Grid container justifyContent="center" display="flex">
+
         
-                                <Grid item>
+                                <Grid item mr={1}>
                                     <Typography fontSize=".9em" className={classes.infoLinks}>          
                                         <Link 
                                             className={classes.noUnderlines}
@@ -61,14 +83,15 @@ const PostList: FC<PostsProps> = ({ posts }) => {
                                         </Link>
                                     </Typography>
                                 </Grid>
+                                <Grid item >
+                                    <FeatherIcon icon="mail" size="22"/>
+                                </Grid>
                             </Grid>
         
-                            <Grid container>
-                                <Grid item>
-                                    <FeatherIcon icon="home" size="22"/>
-                                </Grid>
+                            <Grid container justifyContent="center" display="flex">
+
         
-                                <Grid item>
+                                <Grid item mr={1}>
                                     <Typography fontSize=".9em" className={classes.infoLinks}>          
                                         <Link
                                             className={classes.noUnderlines}
@@ -79,38 +102,22 @@ const PostList: FC<PostsProps> = ({ posts }) => {
                                         </Link>
                                     </Typography>
                                 </Grid>
+
+                                <Grid item>
+                                    <FeatherIcon icon="home" size="22"/>
+                                </Grid>
                             </Grid>
                         </Grid>
-                    </Grid>
-
-                    <Grid 
-                        item 
-                        xs={8} 
-                        padding={2} 
-                        display="flex" 
-                        justifyContent="center" 
-                        className={classes.postPreview}
-                    >
-                        <Typography textAlign="left" variant="h5" color="darkBlue">
-                         {post.title}
-                        </Typography>
-
-                        <Typography textAlign="left">
-                            "
-                            {post.body}
-                            ..." (to full post)
-                        </Typography>
+                        <hr style={{ width:"50%" }} />
                         
-                        <Typography textAlign="right" className={classes.commentsInfo}>
-                            comments: ({post.commentsNo})
-                        </Typography>
                     </Grid>
-              </Grid>
+
             ))
         ) : (
             <span><LinearProgress /></span>
         )}
-        </>
+
+        </List>
     );
 };
 
