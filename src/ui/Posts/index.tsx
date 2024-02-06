@@ -10,18 +10,18 @@ import {
     MenuItem,
     Select,
     TextField,
-    Typography
+    Typography,
+    useMediaQuery
 } from '@mui/material';
 import { Theme } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import FeatherIcon from 'feather-icons-react';
 
 import { savePostsList } from "./../../store/postsSlice";
-import type { PostDTO } from "./../../models/postsDTO.model";
+import type { PostDTO } from "../../models/postDTO.model";
 import type { UserDTO } from "../../models/userDTO.model";
 import type { PostModel } from "./../../models/post.model";
 import PostList from "./PostList";
-
 
 const postsContainerStyles = makeStyles((theme: Theme) => ({
     filterOptionLeft: {
@@ -34,6 +34,11 @@ const postsContainerStyles = makeStyles((theme: Theme) => ({
     },
     icon: {
         cursor: "pointer"
+    },
+    containerBorder: {
+        border: "2px solid #999", 
+        borderRadius: "12px", 
+        boxShadow: "rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset, rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset, rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px"
     }
 }));
 
@@ -41,6 +46,7 @@ const PostsContainer: FC = () => {
     const classes = postsContainerStyles();
     const postsList = useSelector((state) => (state as any).posts);
     const dispatch = useDispatch();
+    const matches = useMediaQuery('(max-width:800px)');
     const generator = new AvatarGenerator();
 
     const [posts, setPosts] = useState<PostModel[]>([]);
@@ -57,7 +63,9 @@ const PostsContainer: FC = () => {
     }
 
     const handleChangeFilterBy = (event: SelectChangeEvent): void => setFilterBy(event.target.value);
-    const saveSearchTermValue = (event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => setSearchTerm(event.target.value);
+    const saveSearchTermValue = (
+        event: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>
+    ) => setSearchTerm(event.target.value);
 
     const deliverFilteringInfo = () => {
         let filtered: PostModel[] = [];
@@ -144,7 +152,7 @@ const PostsContainer: FC = () => {
                 pr={5}
                 display="flex"
                 alignItems="center"
-                justifyContent="flex-end"
+                justifyContent={matches ? "center" : "flex-end"}
             >
                 <Typography>
                     Filter posts by 
@@ -173,15 +181,18 @@ const PostsContainer: FC = () => {
             </Grid>
 
             <Grid                  
-                item 
+                item
+                mt={matches ? 5 : 0}
                 xs={12} 
                 md={6} 
                 pr={5}
                 display="flex"
                 alignItems="center"
-                justifyContent="flex-start"
+                justifyContent={matches ? "center" : "flex-start"}
             >
-                <TextField 
+                <TextField
+                    autoFocus
+                    inputRef={input => input && input.focus()} 
                     label="Search..."
                     variant="outlined" 
                     onChange={saveSearchTermValue}
@@ -210,15 +221,27 @@ const PostsContainer: FC = () => {
             </Grid>
 
             <Grid mt={6} mb={3} width="100%">
-                <Typography fontStyle="italic" letterSpacing="0.05em" fontWeight="500" fontSize="1.1em" textAlign="center">
+                <Typography 
+                    fontStyle="italic" 
+                    letterSpacing="0.05em" 
+                    fontWeight="500" 
+                    fontSize="1.1em" 
+                    textAlign="center"
+                >
                     {postsInfo}
                 </Typography>
             </Grid>
 
-            <Grid xs={0} md={2} />
+            <Grid item xs={0} md={2} />
 
             {posts.length > 0 && (
-                <Grid item xs={12} md={8} style={{ border: "2px solid #999", borderRadius: "12px", boxShadow: "rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset, rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset, rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px"}} p={4}>
+                <Grid 
+                    item 
+                    xs={12} 
+                    md={8}  
+                    p={!matches ? 4 : .5}
+                    className={classes.containerBorder} 
+                >
                     <PostList posts={posts} />
                 </Grid>
             )}
