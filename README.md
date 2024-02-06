@@ -1,6 +1,8 @@
-# Getting Started with Create React App
+# Funky Posts app, version: 0.5 (early)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app). Main tools/frameworks used in creating this project were React, Typescript, React Router, Redux Toolkit and MUI.
+
+Note: There's a possible libraries version mismatch due to fact that Create-react-app was upgraded to work with latest React (v18) which adds some confustion in comaptibility with MUI and even Redux (Toolkit). So, installation of some packages via NPM should be followed with the "--force" flag.
 
 ## Available Scripts
 
