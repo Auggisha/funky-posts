@@ -4,7 +4,7 @@ import { makeStyles } from '@mui/styles';
 const postStyles = makeStyles((theme: Theme) => ({
     backToRootLink: {
         position: "absolute", 
-        right: "50%", 
+        right: "48%", 
         marginTop: "16px",
         textDecoration: "none"
     },

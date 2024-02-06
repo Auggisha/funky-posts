@@ -17,7 +17,11 @@ import type { CommentDTO } from "../../models/commentDTO.model";
 import type { UserDTO } from "../../models/userDTO.model";
 import postStyles from "./Post.styles";
 
-const PostContainer: FC = () => {
+interface PostContainerProps {
+    hello: () => string;
+};
+
+const PostContainer: FC<PostContainerProps> = ({ hello }) => {
     const classes = postStyles();
     const { id } = useParams();
     const matches = useMediaQuery('(max-width:800px)');
@@ -52,6 +56,10 @@ const PostContainer: FC = () => {
             fetchUserInfo();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fetchedPost]);
+
+    useEffect(() => {
+        console.log(`${hello()} Post`);
+    }, [hello]);
 
     if (!fetchedPost || !userInfo) return <CircularProgress />;
 

@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { Grid, Typography } from '@mui/material';
 import { Theme } from '@mui/material';
 import { makeStyles } from '@mui/styles';
@@ -18,8 +18,16 @@ const headerStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const Header: FC = () => {
+interface HeaderProps {
+    hello: () => string;
+}
+
+const Header: FC<HeaderProps> = ({ hello }) => {
     const classes = headerStyles();
+
+    useEffect(() => {
+        console.log(`${hello()} Header`);
+    }, [hello]);
 
     return (
         <Grid padding={4} className={classes.fixedHeader}>

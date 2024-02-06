@@ -42,7 +42,11 @@ const postsContainerStyles = makeStyles((theme: Theme) => ({
     }
 }));
 
-const PostsContainer: FC = () => {
+interface PostsContainerProps {
+    hello: () => string;
+}
+
+const PostsContainer: FC<PostsContainerProps> = ({ hello }) => {
     const classes = postsContainerStyles();
     const postsList = useSelector((state) => (state as any).posts);
     const dispatch = useDispatch();
@@ -108,10 +112,12 @@ const PostsContainer: FC = () => {
     }, [posts]);
   
     useEffect(() => {
-      fetchAllPosts();
-      fetchAllUsers();
-    }, []);
-  
+        console.log(`${hello()} Posts (container)`);
+
+        fetchAllPosts();
+        fetchAllUsers();
+    }, [hello]);
+
     useEffect(() => {
       if (fetchedPosts.length > 0 && fetchedUsers.length > 0) {
         let formatted = [];
@@ -242,7 +248,7 @@ const PostsContainer: FC = () => {
                     p={!matches ? 4 : .5}
                     className={classes.containerBorder} 
                 >
-                    <PostList posts={posts} />
+                    <PostList posts={posts} hello={hello} />
                 </Grid>
             )}
         </Grid>

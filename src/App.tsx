@@ -6,16 +6,31 @@ import Posts from "./ui/Posts";
 import Header from "./ui/Header";
 import NotFound from "./ui/404";
 
-const App = () => (
-  <div className="App">
-    <Header />
+const App = () => {
+  const helloMessage = "Hello from";
 
-    <Routes>
-      <Route path="/posts" element={<Posts />} />
-      <Route path="/post/:id" element={<Post />} />
-      <Route path="*" element={<NotFound />} />
-    </Routes>
-  </div>
-);
+  return (
+    <div className="App">
+      <Header hello={() => helloMessage} />
+
+      <Routes>
+        <Route 
+          path="/posts" 
+          element={<Posts hello={() => helloMessage} />} 
+        />
+
+        <Route 
+          path="/post/:id" 
+          element={<Post hello={() => helloMessage} />} 
+        />
+
+        <Route 
+          path="*" 
+          element={<NotFound hello={() => helloMessage} />} 
+        />
+      </Routes>
+    </div>
+  );
+}
 
 export default App;

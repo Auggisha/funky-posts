@@ -1,8 +1,16 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { Box, Typography } from '@mui/material';
 
-const NotFound: FC = () => {
+interface NotFoundProps {
+    hello: () => string;
+}
+
+const NotFound: FC<NotFoundProps> = ({ hello }) => {
+    useEffect(() => {
+        console.log(`${hello()} NotFound`);
+    }, [hello]);
+
     return (
         <Box m={5}>
             <Typography color="red" fontSize="1.5rem" textAlign="center">
@@ -21,3 +29,4 @@ const NotFound: FC = () => {
 }
 
 export default NotFound;
+

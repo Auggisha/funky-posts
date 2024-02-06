@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import {
     Grid,
     LinearProgress,
@@ -15,9 +15,10 @@ import postsStyles from "./PostList.styles";
 
 interface PostsProps {
     posts: PostModel[];
+    hello: () => string;
 }
 
-const PostList: FC<PostsProps> = ({ posts }) => {
+const PostList: FC<PostsProps> = ({ posts, hello }) => {
     const classes = postsStyles();
     const navigate = useNavigate();
     const matches = useMediaQuery('(max-width:600px)');
@@ -29,6 +30,10 @@ const PostList: FC<PostsProps> = ({ posts }) => {
     }
 
     const navigateToPost = (val: number) => navigate(`/post/${val}`)
+
+    useEffect(() => {
+        console.log(`${hello()} Posts list`);
+    }, [hello]);
 
     return (
         <List>
